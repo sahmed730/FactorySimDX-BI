@@ -1,6 +1,6 @@
 # FactorySimDX - Enterprise IoT Simulation
 
-> *Inspired by **MEIDEN ENGINEERING CORPORATION***
+> *Inspired by **MEIDENSHA CORPORATION***
 
 FactorySimDX is a highly advanced Enterprise Data Lake and Factory IoT simulation platform. Designed to monitor and manage factory performance, this project integrates **Python**, **PostgreSQL**, and **Power BI** to make complex manufacturing data accessible, real-time, and user-friendly.
 

@@ -1,7 +1,7 @@
 # FactorySimDX - Comprehensive Project Documentation
 
 ## 1. Project Overview
-**FactorySimDX** is a state-of-the-art Enterprise IoT and Data Lake simulation platform. Inspired by the advanced manufacturing environments of **MEIDEN ENGINEERING CORPORATION**, it provides a full-stack data pipeline from raw sensor generation to real-time BI visualization.
+**FactorySimDX** is a state-of-the-art Enterprise IoT and Data Lake simulation platform. Inspired by the advanced manufacturing environments of **MEIDENSHA CORPORATION**, it provides a full-stack data pipeline from raw sensor generation to real-time BI visualization.
 
 The project solves the challenge of visualizing high-frequency factory data by utilizing a local PostgreSQL database combined with Power BI's DirectQuery mode, achieving real-time dashboarding without costly cloud infrastructure or UI interruptions.
 
