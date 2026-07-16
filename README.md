@@ -1,6 +1,14 @@
-# MeidenSmart AI - FactorySimDX
+# FactorySimDX - Enterprise IoT Simulation
 
-This project simulates a highly advanced Enterprise Data Lake / Factory IoT environment. It includes batch historical data generation, a live continuous IoT sensor data stream, an AI Predictive Maintenance model, and a powerful UI to manage it all.
+> *Inspired by **MEIDEN ENGINEERING CORPORATION***
+
+FactorySimDX is a highly advanced Enterprise Data Lake and Factory IoT simulation platform. Designed to monitor and manage factory performance, this project integrates **Python**, **PostgreSQL**, and **Power BI** to make complex manufacturing data accessible, real-time, and user-friendly.
+
+**Key Features:**
+- 🏭 **Batch Historical Data:** Automatically generates years of historical factory data.
+- 📡 **Live IoT Sensor Stream:** Streams continuous, real-time telemetry into a local PostgreSQL database.
+- 🤖 **AI Predictive Maintenance:** Detects anomalies and calculates machine failure risks on the fly.
+- 📊 **Power BI Integration:** Visualizes the entire pipeline in a sleek, real-time command dashboard.
 
 ## Prerequisites
 
