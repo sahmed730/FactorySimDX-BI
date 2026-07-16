@@ -1,0 +1,118 @@
+// ==========================================
+// MeidenSmart AI - Snowflake Medallion Data Architecture
+// Use this code in https://dbdiagram.io to generate the ERD!
+// ==========================================
+
+Table DIM_FACTORY {
+  Factory varchar [primary key]
+  Type varchar
+  Location varchar
+}
+
+Table DIM_PRODUCTION_LINE {
+  Production_Line varchar [primary key]
+  Factory varchar [ref: > DIM_FACTORY.Factory]
+}
+
+Table DIM_MACHINE {
+  Machine varchar [primary key]
+  Production_Line varchar [ref: > DIM_PRODUCTION_LINE.Production_Line]
+  Factory varchar [ref: > DIM_FACTORY.Factory]
+  Type varchar
+}
+
+Table DIM_PRODUCT {
+  Product varchar [primary key]
+  Factory_Type varchar
+}
+
+Table DIM_EMPLOYEE {
+  Employee varchar [primary key]
+  Factory varchar [ref: > DIM_FACTORY.Factory]
+  Role varchar
+}
+
+Table DIM_SUPPLIER {
+  Supplier varchar [primary key]
+  Delivery_Time_Days int
+}
+
+Table DIM_CUSTOMER {
+  Customer varchar [primary key]
+  Type varchar
+}
+
+Table DIM_WAREHOUSE {
+  Warehouse varchar [primary key]
+  Factory varchar [ref: > DIM_FACTORY.Factory]
+  Type varchar
+}
+
+Table DIM_PART {
+  Part varchar [primary key]
+  Supplier varchar [ref: > DIM_SUPPLIER.Supplier]
+}
+
+// ------------------------------------------
+// FACTS (TRANSACTIONS)
+// ------------------------------------------
+
+Table FACT_SENSOR {
+  Timestamp timestamp
+  Factory varchar [ref: > DIM_FACTORY.Factory]
+  Production_Line varchar [ref: > DIM_PRODUCTION_LINE.Production_Line]
+  Machine varchar [ref: > DIM_MACHINE.Machine]
+  Temperature float
+  Vibration float
+  Power_Consumption float
+  Running_Status varchar
+  Mode varchar
+  Error_Code varchar
+}
+
+Table FACT_MAINTENANCE {
+  Date date
+  Machine varchar [ref: > DIM_MACHINE.Machine]
+  Technician varchar [ref: > DIM_EMPLOYEE.Employee]
+  Failure varchar
+  Root_Cause varchar
+  Downtime float
+  Cost float
+}
+
+Table FACT_ERP_PRODUCTION {
+  Production_Order varchar [primary key]
+  Product varchar [ref: > DIM_PRODUCT.Product]
+  Operator varchar [ref: > DIM_EMPLOYEE.Employee]
+  Shift varchar
+  Quantity_Planned int
+  Quantity_Produced int
+  Scrap int
+}
+
+Table FACT_QUALITY {
+  Inspection_ID varchar [primary key]
+  Date date
+  Product varchar [ref: > DIM_PRODUCT.Product]
+  Inspector varchar [ref: > DIM_EMPLOYEE.Employee]
+  Defect_Type varchar
+  Pass int
+  Fail int
+}
+
+Table FACT_INVENTORY {
+  Date date
+  Part varchar [ref: > DIM_PART.Part]
+  Warehouse varchar [ref: > DIM_WAREHOUSE.Warehouse]
+  Supplier varchar [ref: > DIM_SUPPLIER.Supplier]
+  Stock_Level int
+}
+
+Table FACT_SHIPMENTS {
+  Shipment_ID varchar [primary key]
+  Date date
+  Production_Order varchar [ref: - FACT_ERP_PRODUCTION.Production_Order]
+  Customer varchar [ref: > DIM_CUSTOMER.Customer]
+  Product varchar [ref: > DIM_PRODUCT.Product]
+  Delayed boolean
+}

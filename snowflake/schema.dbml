@@ -1,0 +1,158 @@
+Project MeidenSmart_AI {
+  database_type: 'Snowflake'
+  Note: 'Medallion Architecture - Bronze Layer (Raw Ingestion)'
+}
+
+// =====================================
+// MASTER DATA (DIMENSIONS)
+// =====================================
+
+Table DIM_FACTORY {
+  Factory varchar [primary key]
+  Type varchar
+  Location varchar
+}
+
+Table DIM_PRODUCTION_LINE {
+  Production_Line varchar [primary key]
+  Factory varchar [ref: > DIM_FACTORY.Factory]
+}
+
+Table DIM_MACHINE {
+  Machine varchar [primary key]
+  Production_Line varchar [ref: > DIM_PRODUCTION_LINE.Production_Line]
+  Factory varchar [ref: > DIM_FACTORY.Factory]
+  Type varchar
+  normal_temp float
+  max_rpm float
+  power_kw float
+  vibration_base float
+  reliability float
+}
+
+Table DIM_PRODUCT {
+  Product varchar [primary key]
+  Factory_Type varchar
+}
+
+Table DIM_EMPLOYEE {
+  Employee varchar [primary key]
+  Department varchar
+  Role varchar
+  Factory varchar [ref: > DIM_FACTORY.Factory]
+}
+
+Table DIM_SUPPLIER {
+  Supplier varchar [primary key]
+  Delivery_Time int
+  Quality_Score float
+}
+
+Table DIM_CUSTOMER {
+  Customer varchar [primary key]
+  Type varchar
+}
+
+Table DIM_WAREHOUSE {
+  Warehouse varchar [primary key]
+  Factory varchar [ref: > DIM_FACTORY.Factory]
+  Type varchar
+}
+
+Table DIM_PART {
+  Part varchar [primary key]
+  Supplier varchar [ref: > DIM_SUPPLIER.Supplier]
+  Cost float
+  Lead_Time int
+  Safety_Stock int
+}
+
+// =====================================
+// TRANSACTION DATA (FACTS)
+// =====================================
+
+Table FACT_SENSOR {
+  Timestamp timestamp
+  Factory varchar [ref: > DIM_FACTORY.Factory]
+  Production_Line varchar [ref: > DIM_PRODUCTION_LINE.Production_Line]
+  Machine varchar [ref: > DIM_MACHINE.Machine]
+  Temperature float
+  Vibration float
+  Voltage float
+  Current float
+  Power_Consumption float
+  Pressure float
+  RPM float
+  Oil_Level float
+  Humidity float
+  Noise float
+  Running_Status varchar
+  Error_Code varchar
+  Mode varchar
+}
+
+Table FACT_ERP_PRODUCTION {
+  Production_Order varchar [primary key]
+  Product varchar [ref: > DIM_PRODUCT.Product]
+  Quantity_Planned int
+  Quantity_Produced int
+  Scrap int
+  Operator varchar [ref: > DIM_EMPLOYEE.Employee]
+  Shift varchar
+  Start_Time timestamp
+  End_Time timestamp
+}
+
+Table FACT_MAINTENANCE {
+  Date date
+  Machine varchar [ref: > DIM_MACHINE.Machine]
+  Failure varchar
+  Root_Cause varchar
+  Severity varchar
+  Technician varchar [ref: > DIM_EMPLOYEE.Employee]
+  Downtime float
+  Repair_Time float
+  Cost float
+}
+
+Table FACT_QUALITY {
+  Inspection_ID varchar [primary key]
+  Date date
+  Product varchar [ref: > DIM_PRODUCT.Product]
+  Defect_Type varchar
+  Pass int
+  Fail int
+  Inspector varchar [ref: > DIM_EMPLOYEE.Employee]
+}
+
+Table FACT_INVENTORY {
+  Date date
+  Part varchar [ref: > DIM_PART.Part]
+  Stock int
+  Safety_Stock int
+  Warehouse varchar [ref: > DIM_WAREHOUSE.Warehouse]
+  Supplier varchar [ref: > DIM_SUPPLIER.Supplier]
+  Cost float
+  Lead_Time int
+}
+
+Table FACT_ENERGY {
+  Date date
+  Machine varchar [ref: > DIM_MACHINE.Machine]
+  Energy float
+  Cost float
+  Carbon_Emission float
+  Peak_Usage float
+}
+
+Table FACT_SHIPMENTS {
+  Shipment_ID varchar [primary key]
+  Production_Order varchar [ref: > FACT_ERP_PRODUCTION.Production_Order]
+  Customer varchar [ref: > DIM_CUSTOMER.Customer]
+  Product varchar [ref: > DIM_PRODUCT.Product]
+  Quantity int
+  Dispatch_Date date
+  Expected_Delivery_Date date
+  Delayed boolean
+  Delay_Reason varchar
+}

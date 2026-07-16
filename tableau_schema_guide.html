@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau Data Connections Guide</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --surface: #1e293b;
+            --primary: #38bdf8;
+            --accent: #f43f5e;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --fact-color: #8b5cf6;
+            --dim-color: #10b981;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, var(--primary), var(--fact-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .schema-container {
+            position: relative;
+            width: 800px;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+        }
+
+        .table-card {
+            position: absolute;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            width: 220px;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        .table-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.7);
+            border-color: rgba(255, 255, 255, 0.2);
+            z-index: 20;
+        }
+
+        .fact-table {
+            border-top: 4px solid var(--fact-color);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 260px;
+            animation: float 6s ease-in-out infinite;
+        }
+        .fact-table:hover {
+            transform: translate(-50%, -60%) scale(1.05);
+        }
+
+        .dim-table-1 {
+            border-top: 4px solid var(--dim-color);
+            top: 20%;
+            left: 10%;
+            animation: float 7s ease-in-out infinite 1s;
+        }
+
+        .dim-table-2 {
+            border-top: 4px solid var(--dim-color);
+            bottom: 20%;
+            right: 10%;
+            animation: float 5s ease-in-out infinite 2s;
+        }
+
+        .table-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+
+        .table-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+
+        .table-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .column-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .column-list li {
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+        }
+
+        .key-icon {
+            color: var(--accent);
+            margin-right: 6px;
+            font-size: 0.8rem;
+        }
+
+        /* SVG Connections */
+        svg.connections {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .noodle {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.2);
+            stroke-width: 3;
+            stroke-dasharray: 8 8;
+            animation: dash 20s linear infinite;
+        }
+
+        .noodle-glow {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 6;
+            filter: blur(8px);
+            opacity: 0.5;
+        }
+
+        .connection-label {
+            position: absolute;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 15;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .table-card:hover ~ .connection-label-1,
+        .dim-table-1:hover ~ .connection-label-1 {
+            opacity: 1;
+        }
+
+        /* Keyframes */
+        @keyframes float {
+            0% { transform: translate(-50%, -50%); }
+            50% { transform: translate(-50%, -53%); }
+            100% { transform: translate(-50%, -50%); }
+        }
+        
+        .dim-table-1 { transform: translateY(0); }
+        @keyframes float-dim-1 {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: -1000; }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive resets for floating animations on dims */
+        .dim-table-1 { animation: float-dim-1 6s ease-in-out infinite; }
+        .dim-table-2 { animation: float-dim-1 7s ease-in-out infinite 1s; }
+        .dim-table-1:hover { transform: translateY(-10px) scale(1.05); }
+        .dim-table-2:hover { transform: translateY(-10px) scale(1.05); }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Tableau Star Schema</h1>
+        <p class="subtitle">Interactive guide to connect your data nodes</p>
+    </div>
+
+    <div class="schema-container">
+        <!-- SVG Connecting Lines -->
+        <svg class="connections" xmlns="http://www.w3.org/2000/svg">
+            <!-- Line from DIM_MACHINE to FACT_SENSOR -->
+            <path class="noodle-glow" d="M 220 200 C 350 200, 300 250, 350 250"></path>
+            <path class="noodle" d="M 220 200 C 350 200, 300 250, 350 250"></path>
+            
+            <!-- Line from DIM_FACTORY to FACT_SENSOR -->
+            <path class="noodle-glow" d="M 580 350 C 450 350, 500 250, 450 250"></path>
+            <path class="noodle" d="M 580 350 C 450 350, 500 250, 450 250"></path>
+        </svg>
+
+        <!-- Tooltips -->
+        <div class="connection-label" style="top: 200px; left: 260px;">Join on: [Machine]</div>
+        <div class="connection-label" style="top: 320px; left: 480px;">Join on: [Factory]</div>
+
+        <!-- DIM MACHINE -->
+        <div class="table-card dim-table-1">
+            <div class="table-header">
+                <span class="table-icon">⚙️</span>
+                <span class="table-title">DIM_MACHINE</span>
+            </div>
+            <ul class="column-list">
+                <li><span class="key-icon">🔑</span> Machine (PK)</li>
+                <li>📦 Production Line</li>
+                <li>🏭 Factory</li>
+                <li>🔧 Type</li>
+                <li>⚡ power_kw</li>
+            </ul>
+        </div>
+
+        <!-- FACT SENSOR -->
+        <div class="table-card fact-table">
+            <div class="table-header">
+                <span class="table-icon">📊</span>
+                <span class="table-title" style="color: var(--fact-color);">FACT_SENSOR</span>
+            </div>
+            <ul class="column-list">
+                <li><span class="key-icon">🔗</span> Machine (FK)</li>
+                <li><span class="key-icon">🔗</span> Factory (FK)</li>
+                <li>⏱️ Timestamp</li>
+                <li>🌡️ Temperature</li>
+                <li>📈 Vibration</li>
+                <li>⚡ Power Consumption</li>
+                <li>⚙️ RPM</li>
+            </ul>
+        </div>
+
+        <!-- DIM FACTORY -->
+        <div class="table-card dim-table-2">
+            <div class="table-header">
+                <span class="table-icon">🏭</span>
+                <span class="table-title">DIM_FACTORY</span>
+            </div>
+            <ul class="column-list">
+                <li><span class="key-icon">🔑</span> Factory (PK)</li>
+                <li>📍 Location</li>
+                <li>🏢 Type</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Interactive SVG drawing logic to dynamically connect elements
+        function updateLines() {
+            const fact = document.querySelector('.fact-table').getBoundingClientRect();
+            const dim1 = document.querySelector('.dim-table-1').getBoundingClientRect();
+            const dim2 = document.querySelector('.dim-table-2').getBoundingClientRect();
+            const container = document.querySelector('.schema-container').getBoundingClientRect();
+
+            const svg = document.querySelector('.connections');
+            const paths = svg.querySelectorAll('path');
+
+            // Dim1 to Fact
+            const p1Start = { x: (dim1.right - container.left), y: (dim1.top + dim1.height/2 - container.top) };
+            const p1End = { x: (fact.left - container.left), y: (fact.top + fact.height/2 - container.top) };
+            
+            const path1 = `M ${p1Start.x} ${p1Start.y} C ${p1Start.x + 100} ${p1Start.y}, ${p1End.x - 100} ${p1End.y}, ${p1End.x} ${p1End.y}`;
+            paths[0].setAttribute('d', path1);
+            paths[1].setAttribute('d', path1);
+
+            // Dim2 to Fact
+            const p2Start = { x: (dim2.left - container.left), y: (dim2.top + dim2.height/2 - container.top) };
+            const p2End = { x: (fact.right - container.left), y: (fact.top + fact.height/2 - container.top) };
+            
+            const path2 = `M ${p2Start.x} ${p2Start.y} C ${p2Start.x - 100} ${p2Start.y}, ${p2End.x + 100} ${p2End.y}, ${p2End.x} ${p2End.y}`;
+            paths[2].setAttribute('d', path2);
+            paths[3].setAttribute('d', path2);
+        }
+
+        // Update lines continuously for floating animation
+        function animateLines() {
+            updateLines();
+            requestAnimationFrame(animateLines);
+        }
+        animateLines();
+    </script>
+</body>
+</html>

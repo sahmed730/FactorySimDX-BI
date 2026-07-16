@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="Ferrite">
+    <title>data_architecture</title>
+    <style>
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+}
+.markdown-body {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 24px;
+}
+.markdown-body h1, .markdown-body h2, .markdown-body h3,
+.markdown-body h4, .markdown-body h5, .markdown-body h6 {
+    margin-top: 24px;
+    margin-bottom: 16px;
+    font-weight: 600;
+    line-height: 1.25;
+}
+.markdown-body h1 { font-size: 2em; border-bottom: 1px solid; padding-bottom: 0.3em; }
+.markdown-body h2 { font-size: 1.5em; border-bottom: 1px solid; padding-bottom: 0.3em; }
+.markdown-body h3 { font-size: 1.25em; }
+.markdown-body h4 { font-size: 1em; }
+.markdown-body h5 { font-size: 0.875em; }
+.markdown-body h6 { font-size: 0.85em; }
+.markdown-body p { margin-top: 0; margin-bottom: 16px; }
+.markdown-body a { text-decoration: none; }
+.markdown-body a:hover { text-decoration: underline; }
+.markdown-body ul, .markdown-body ol {
+    margin-top: 0;
+    margin-bottom: 16px;
+    padding-left: 2em;
+}
+.markdown-body li { margin-bottom: 4px; }
+.markdown-body li + li { margin-top: 4px; }
+.markdown-body ul.contains-task-list { list-style-type: none; padding-left: 0; }
+.markdown-body .task-list-item { padding-left: 1.5em; position: relative; }
+.markdown-body .task-list-item input[type="checkbox"] {
+    position: absolute; left: 0; top: 0.3em;
+}
+.markdown-body blockquote {
+    margin: 0 0 16px 0; padding: 0 1em; border-left: 4px solid;
+}
+.markdown-body blockquote > :first-child { margin-top: 0; }
+.markdown-body blockquote > :last-child { margin-bottom: 0; }
+.markdown-body code {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+    font-size: 0.9em;
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+}
+.markdown-body pre {
+    margin-top: 0; margin-bottom: 16px;
+    padding: 16px; overflow: auto; border-radius: 6px; line-height: 1.45;
+}
+.markdown-body pre code {
+    padding: 0; background: transparent; border-radius: 0; font-size: 0.875em;
+}
+.markdown-body table { border-collapse: collapse; width: 100%; margin-bottom: 16px; }
+.markdown-body th, .markdown-body td { padding: 8px 12px; border: 1px solid; }
+.markdown-body th { font-weight: 600; text-align: left; }
+.markdown-body hr { height: 2px; margin: 24px 0; border: none; }
+.markdown-body img { max-width: 100%; height: auto; border-radius: 4px; }
+.markdown-body strong { font-weight: 600; }
+.markdown-body em { font-style: italic; }
+.markdown-body del { text-decoration: line-through; }
+.ferrite-mermaid { margin: 1rem 0; }
+.ferrite-mermaid svg { max-width: 100%; height: auto; display: block; }
+.ferrite-mermaid-fallback .mermaid-caption { font-size: 0.85rem; color: var(--muted, #666); margin-bottom: 0.5rem; }
+.markdown-toc { margin-bottom: 2rem; padding: 1rem 1.25rem; border-radius: 8px; }
+.markdown-toc .toc-title { margin-top: 0; font-size: 1.1rem; }
+.markdown-toc ul { list-style: none; padding-left: 0; margin: 0; }
+.markdown-toc li { margin: 0.35rem 0; }
+.markdown-toc .toc-level-2 { padding-left: 1rem; }
+.markdown-toc .toc-level-3 { padding-left: 2rem; }
+.markdown-toc .toc-level-4 { padding-left: 3rem; }
+.markdown-toc .toc-level-5 { padding-left: 4rem; }
+.markdown-toc .toc-level-6 { padding-left: 5rem; }
+
+:root { color-scheme: dark; }
+
+body {
+    background-color: rgba(30,30,30,1);
+    color: rgba(220,220,220,1);
+}
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+    color: rgba(100,180,255,1);
+}
+.markdown-body h1,
+.markdown-body h2 {
+    border-bottom-color: rgba(60,60,60,1);
+}
+.markdown-body a {
+    color: rgba(100,180,255,1);
+}
+.markdown-body blockquote {
+    color: rgba(180,180,180,1);
+    border-left-color: rgba(80,80,80,1);
+}
+.markdown-body code {
+    background-color: rgba(45,45,45,1);
+    color: rgba(200,200,150,1);
+}
+.markdown-body pre {
+    background-color: rgba(35,39,46,1);
+    border: 1px solid rgba(55,60,68,1);
+}
+.markdown-body th,
+.markdown-body td {
+    border-color: rgba(60,65,75,1);
+}
+.markdown-body th {
+    background-color: rgba(45,50,60,1);
+}
+.markdown-body hr {
+    background-color: rgba(80,80,80,1);
+}
+.markdown-body table tbody tr:nth-child(even) td {
+    background-color: rgba(255,255,255,0.04);
+}
+.markdown-toc {
+    background-color: rgba(37,37,37,1);
+    border: 1px solid rgba(50,50,50,1);
+}
+.markdown-toc .toc-title {
+    color: rgba(100,180,255,1);
+}
+
+
+
+
+    </style>
+</head>
+<body>
+<!-- ferrite-html-export: theme=FollowEditor self_contained=true path=D:\projects\MDATA\docs\data_architecture.md ts=1784134614 -->
+<article class="markdown-body">
+    <header class="doc-title"><h1>data_architecture</h1></header>
+<h1><a href="#enterprise-data-architecture--entity-relationship-diagram" aria-hidden="true" class="anchor" id="enterprise-data-architecture--entity-relationship-diagram"></a>Enterprise Data Architecture &amp; Entity Relationship Diagram</h1>
+<p>This document maps the causal relationships and foreign-key linkages between the Master Data (Dimensions) and Transaction Data (Facts) generated by the Digital Twin Simulator.</p>
+<figure class="ferrite-mermaid ferrite-mermaid-fallback"><figcaption class="mermaid-caption">Mermaid diagram</figcaption><pre class="mermaid-source"><code><span style="color:rgba(192,197,206,1)">erDiagram
+</span><span style="color:rgba(192,197,206,1)">    %% Master Data (Dimensions)
+</span><span style="color:rgba(192,197,206,1)">    DIM_FACTORY {
+</span><span style="color:rgba(192,197,206,1)">        string Factory PK
+</span><span style="color:rgba(192,197,206,1)">        string Type
+</span><span style="color:rgba(192,197,206,1)">        string Location
+</span><span style="color:rgba(192,197,206,1)">    }
+</span><span style="color:rgba(192,197,206,1)">    DIM_PRODUCTION_LINE {
+</span><span style="color:rgba(192,197,206,1)">        string Production_Line PK
+</span><span style="color:rgba(192,197,206,1)">        string Factory FK
+</span><span style="color:rgba(192,197,206,1)">    }
+</span><span style="color:rgba(192,197,206,1)">    DIM_MACHINE {
+</span><span style="color:rgba(192,197,206,1)">        string Machine PK
+</span><span style="color:rgba(192,197,206,1)">        string Production_Line FK
+</span><span style="color:rgba(192,197,206,1)">        string Factory FK
+</span><span style="color:rgba(192,197,206,1)">        string Type
+</span><span style="color:rgba(192,197,206,1)">    }
+</span><span style="color:rgba(192,197,206,1)">    DIM_PRODUCT {
+</span><span style="color:rgba(192,197,206,1)">        string Product PK
+</span><span style="color:rgba(192,197,206,1)">        string Factory_Type
+</span><span style="color:rgba(192,197,206,1)">    }
+</span><span style="color:rgba(192,197,206,1)">    DIM_EMPLOYEE {
+</span><span style="color:rgba(192,197,206,1)">        string Employee PK
+</span><span style="color:rgba(192,197,206,1)">        string Factory FK
+</span><span style="color:rgba(192,197,206,1)">        string Role
+</span><span style="color:rgba(192,197,206,1)">    }
+</span><span style="color:rgba(192,197,206,1)">    DIM_SUPPLIER {
+</span><span style="color:rgba(192,197,206,1)">        string Supplier PK
+</span><span style="color:rgba(192,197,206,1)">        int Delivery_Time
+</span><span style="color:rgba(192,197,206,1)">    }
+</span><span style="color:rgba(192,197,206,1)">    DIM_CUSTOMER {
+</span><span style="color:rgba(192,197,206,1)">        string Customer PK
+</span><span style="color:rgba(192,197,206,1)">        string Type
+</span><span style="color:rgba(192,197,206,1)">    }
+</span><span style="color:rgba(192,197,206,1)">    DIM_WAREHOUSE {
+</span><span style="color:rgba(192,197,206,1)">        string Warehouse PK
+</span><span style="color:rgba(192,197,206,1)">        string Factory FK
+</span><span style="color:rgba(192,197,206,1)">        string Type
+</span><span style="color:rgba(192,197,206,1)">    }
+</span><span style="color:rgba(192,197,206,1)">    DIM_PART {
+</span><span style="color:rgba(192,197,206,1)">        string Part PK
+</span><span style="color:rgba(192,197,206,1)">        string Supplier FK
+</span><span style="color:rgba(192,197,206,1)">    }
+</span><span style="color:rgba(192,197,206,1)">
+</span><span style="color:rgba(192,197,206,1)">    %% Transaction Data (Facts)
+</span><span style="color:rgba(192,197,206,1)">    FACT_SENSOR ||--o{ DIM_MACHINE : &quot;monitors&quot;
+</span><span style="color:rgba(192,197,206,1)">    FACT_SENSOR {
+</span><span style="color:rgba(192,197,206,1)">        datetime Timestamp
+</span><span style="color:rgba(192,197,206,1)">        string Machine FK
+</span><span style="color:rgba(192,197,206,1)">        float Temperature
+</span><span style="color:rgba(192,197,206,1)">        float Vibration
+</span><span style="color:rgba(192,197,206,1)">        float Power_Consumption
+</span><span style="color:rgba(192,197,206,1)">        string Running_Status
+</span><span style="color:rgba(192,197,206,1)">        string Mode
+</span><span style="color:rgba(192,197,206,1)">    }
+</span><span style="color:rgba(192,197,206,1)">
+</span><span style="color:rgba(192,197,206,1)">    FACT_MAINTENANCE ||--o{ DIM_MACHINE : &quot;repairs&quot;
+</span><span style="color:rgba(192,197,206,1)">    FACT_MAINTENANCE ||--o{ DIM_EMPLOYEE : &quot;performed_by (Technician)&quot;
+</span><span style="color:rgba(192,197,206,1)">    FACT_MAINTENANCE {
+</span><span style="color:rgba(192,197,206,1)">        date Date
+</span><span style="color:rgba(192,197,206,1)">        string Machine FK
+</span><span style="color:rgba(192,197,206,1)">        string Technician FK
+</span><span style="color:rgba(192,197,206,1)">        string Failure
+</span><span style="color:rgba(192,197,206,1)">        float Cost
+</span><span style="color:rgba(192,197,206,1)">    }
+</span><span style="color:rgba(192,197,206,1)">
+</span><span style="color:rgba(192,197,206,1)">    FACT_ERP_PRODUCTION ||--o{ DIM_PRODUCT : &quot;manufactures&quot;
+</span><span style="color:rgba(192,197,206,1)">    FACT_ERP_PRODUCTION ||--o{ DIM_EMPLOYEE : &quot;operated_by (Operator)&quot;
+</span><span style="color:rgba(192,197,206,1)">    FACT_ERP_PRODUCTION {
+</span><span style="color:rgba(192,197,206,1)">        string Production_Order PK
+</span><span style="color:rgba(192,197,206,1)">        string Product FK
+</span><span style="color:rgba(192,197,206,1)">        string Operator FK
+</span><span style="color:rgba(192,197,206,1)">        int Quantity_Produced
+</span><span style="color:rgba(192,197,206,1)">        int Scrap
+</span><span style="color:rgba(192,197,206,1)">    }
+</span><span style="color:rgba(192,197,206,1)">
+</span><span style="color:rgba(192,197,206,1)">    FACT_QUALITY ||--o{ DIM_PRODUCT : &quot;inspects&quot;
+</span><span style="color:rgba(192,197,206,1)">    FACT_QUALITY ||--o{ DIM_EMPLOYEE : &quot;inspected_by (Inspector)&quot;
+</span><span style="color:rgba(192,197,206,1)">    FACT_QUALITY {
+</span><span style="color:rgba(192,197,206,1)">        string Inspection_ID PK
+</span><span style="color:rgba(192,197,206,1)">        string Product FK
+</span><span style="color:rgba(192,197,206,1)">        string Inspector FK
+</span><span style="color:rgba(192,197,206,1)">        string Defect_Type
+</span><span style="color:rgba(192,197,206,1)">        int Pass
+</span><span style="color:rgba(192,197,206,1)">        int Fail
+</span><span style="color:rgba(192,197,206,1)">    }
+</span><span style="color:rgba(192,197,206,1)">
+</span><span style="color:rgba(192,197,206,1)">    FACT_INVENTORY ||--o{ DIM_PART : &quot;stocks&quot;
+</span><span style="color:rgba(192,197,206,1)">    FACT_INVENTORY ||--o{ DIM_WAREHOUSE : &quot;stored_in&quot;
+</span><span style="color:rgba(192,197,206,1)">    FACT_INVENTORY ||--o{ DIM_SUPPLIER : &quot;supplied_by&quot;
+</span><span style="color:rgba(192,197,206,1)">    FACT_INVENTORY {
+</span><span style="color:rgba(192,197,206,1)">        date Date
+</span><span style="color:rgba(192,197,206,1)">        string Part FK
+</span><span style="color:rgba(192,197,206,1)">        string Warehouse FK
+</span><span style="color:rgba(192,197,206,1)">        string Supplier FK
+</span><span style="color:rgba(192,197,206,1)">        int Stock
+</span><span style="color:rgba(192,197,206,1)">    }
+</span><span style="color:rgba(192,197,206,1)">
+</span><span style="color:rgba(192,197,206,1)">    FACT_ENERGY ||--o{ DIM_MACHINE : &quot;consumes&quot;
+</span><span style="color:rgba(192,197,206,1)">    FACT_ENERGY {
+</span><span style="color:rgba(192,197,206,1)">        date Date
+</span><span style="color:rgba(192,197,206,1)">        string Machine FK
+</span><span style="color:rgba(192,197,206,1)">        float Energy
+</span><span style="color:rgba(192,197,206,1)">        float Cost
+</span><span style="color:rgba(192,197,206,1)">        float Carbon_Emission
+</span><span style="color:rgba(192,197,206,1)">    }
+</span><span style="color:rgba(192,197,206,1)">
+</span><span style="color:rgba(192,197,206,1)">    FACT_SHIPMENTS ||--o{ FACT_ERP_PRODUCTION : &quot;fulfills&quot;
+</span><span style="color:rgba(192,197,206,1)">    FACT_SHIPMENTS ||--o{ DIM_CUSTOMER : &quot;delivers_to&quot;
+</span><span style="color:rgba(192,197,206,1)">    FACT_SHIPMENTS ||--o{ DIM_PRODUCT : &quot;contains&quot;
+</span><span style="color:rgba(192,197,206,1)">    FACT_SHIPMENTS {
+</span><span style="color:rgba(192,197,206,1)">        string Shipment_ID PK
+</span><span style="color:rgba(192,197,206,1)">        string Production_Order FK
+</span><span style="color:rgba(192,197,206,1)">        string Customer FK
+</span><span style="color:rgba(192,197,206,1)">        string Product FK
+</span><span style="color:rgba(192,197,206,1)">        date Dispatch_Date
+</span><span style="color:rgba(192,197,206,1)">        boolean Delayed
+</span><span style="color:rgba(192,197,206,1)">    }
+</span><span style="color:rgba(192,197,206,1)">
+</span><span style="color:rgba(192,197,206,1)">    %% Core Relationships
+</span><span style="color:rgba(192,197,206,1)">    DIM_FACTORY ||--o{ DIM_PRODUCTION_LINE : &quot;houses&quot;
+</span><span style="color:rgba(192,197,206,1)">    DIM_FACTORY ||--o{ DIM_WAREHOUSE : &quot;houses&quot;
+</span><span style="color:rgba(192,197,206,1)">    DIM_FACTORY ||--o{ DIM_EMPLOYEE : &quot;employs&quot;
+</span><span style="color:rgba(192,197,206,1)">    DIM_PRODUCTION_LINE ||--o{ DIM_MACHINE : &quot;contains&quot;
+</span><span style="color:rgba(192,197,206,1)">    DIM_SUPPLIER ||--o{ DIM_PART : &quot;supplies&quot;
+</span></code></pre></figure>
+<h2><a href="#causal-linkage-business-logic-flow" aria-hidden="true" class="anchor" id="causal-linkage-business-logic-flow"></a>Causal Linkage (Business Logic Flow)</h2>
+<ol>
+<li><strong>Machine Health (IoT)</strong> degrades ➔</li>
+<li>Triggers <strong>Maintenance (Downtime)</strong> ➔</li>
+<li>Reduces <strong>ERP Production Output</strong> &amp; Increases <strong>Scrap</strong> ➔</li>
+<li>Causes <strong>Quality Inspections</strong> to Fail ➔</li>
+<li>Depletes <strong>Inventory</strong> faster than planned ➔</li>
+<li>Causes <strong>Shipments</strong> to be Delayed to Customers.</li>
+</ol>
+
+</article>
+</body>
+</html>

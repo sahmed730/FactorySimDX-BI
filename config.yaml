@@ -1,0 +1,120 @@
+simulation:
+  years: 3
+  start_date: '2023-01-01'
+  sensor_frequency_minutes: 60
+  failure_rate_base: 0.008
+  preventive_maintenance_enabled: true
+  seasonality_enabled: true
+  shift_patterns:
+  - name: Morning
+    start_hour: 6
+    efficiency_multiplier: 1.05
+    staffing_percent: 100
+  - name: Evening
+    start_hour: 14
+    efficiency_multiplier: 1.0
+    staffing_percent: 100
+  - name: Night
+    start_hour: 22
+    efficiency_multiplier: 0.9
+    staffing_percent: 80
+enterprise:
+  factories:
+  - name: Tokyo Transformer Plant
+    type: Transformer Manufacturing
+    machines: 50
+    employees: 200
+  - name: Nagoya Motor Plant
+    type: Motor Manufacturing
+    machines: 80
+    employees: 300
+  - name: Osaka Electrical Equipment Plant
+    type: Electrical Equipment
+    machines: 70
+    employees: 250
+  - name: Fukuoka Renewable Energy Plant
+    type: Renewable Energy Equipment
+    machines: 50
+    employees: 150
+machine_types:
+- name: CNC Milling Machine
+  normal_temp: 55
+  max_rpm: 6000
+  power_kw: 18
+  vibration_base: 1.2
+  reliability: 0.98
+- name: Transformer Winder
+  normal_temp: 42
+  max_rpm: 500
+  power_kw: 9
+  vibration_base: 0.5
+  reliability: 0.99
+- name: Welding Robot
+  normal_temp: 78
+  max_rpm: 0
+  power_kw: 25
+  vibration_base: 1.5
+  reliability: 0.95
+- name: Paint Oven
+  normal_temp: 180
+  max_rpm: 0
+  power_kw: 45
+  vibration_base: 0.2
+  reliability: 0.99
+products:
+- name: Power Transformer 1000kVA
+  factory_type: Transformer Manufacturing
+  bom:
+    Copper Wire: 500
+    Silicon Steel: 1200
+    Transformer Oil: 300
+- name: Industrial Servo Motor
+  factory_type: Motor Manufacturing
+  bom:
+    Copper Wire: 50
+    Steel Plate: 120
+    Bearings: 2
+- name: GIS Circuit Breaker
+  factory_type: Electrical Equipment
+  bom:
+    Steel Plate: 200
+    PCB: 1
+    Sensors: 5
+- name: Solar Inverter 50kW
+  factory_type: Renewable Energy Equipment
+  bom:
+    PCB: 3
+    Sensors: 10
+    Steel Plate: 50
+parts:
+- name: Copper Wire
+  supplier: Sumitomo Metals
+  cost_per_unit: 8.5
+  lead_time_days: 14
+- name: Silicon Steel
+  supplier: Nippon Steel
+  cost_per_unit: 2.2
+  lead_time_days: 21
+- name: Transformer Oil
+  supplier: Idemitsu
+  cost_per_unit: 4.0
+  lead_time_days: 7
+- name: Steel Plate
+  supplier: Nippon Steel
+  cost_per_unit: 1.8
+  lead_time_days: 10
+- name: Bearings
+  supplier: NSK
+  cost_per_unit: 45.0
+  lead_time_days: 5
+- name: PCB
+  supplier: Murata Electronics
+  cost_per_unit: 120.0
+  lead_time_days: 30
+- name: Sensors
+  supplier: Omron
+  cost_per_unit: 15.0
+  lead_time_days: 12
+energy:
+  cost_per_kwh: 0.15
+  co2_kg_per_kwh: 0.4
